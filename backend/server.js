@@ -7,7 +7,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:5173' })); // Vite default port
+app.use(cors({ 
+  origin: ['https://your-frontend.azurestaticapps.net', 'http://localhost:5173'],
+  credentials: true
+}));
 app.use(express.json());
 
 app.use('/api/tasks', taskRoutes);
