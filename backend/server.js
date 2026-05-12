@@ -7,16 +7,21 @@ dotenv.config();
 
 const app = express();
 
-// 🔥 FINAL STRONG CORS CONFIGURATION
+// Strong CORS Configuration
 app.use(cors({
-  origin: '*',                    // Allow all origins (for deployment)
+  origin: '*',   // Allow all for now (we can restrict later)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
-// Handle preflight OPTIONS requests
-app.options('*', cors());
+// Explicitly handle preflight requests
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200);
+});
 
 app.use(express.json());
 
