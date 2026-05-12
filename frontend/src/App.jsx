@@ -16,9 +16,10 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const res = await getTasks();
-      setTasks(res.data);
+      const data = await getTasks();
+      setTasks(Array.isArray(data) ? data : data.data || []);
     } catch (err) {
+      console.error("Fetch error:", err);
       setError('Failed to load tasks');
     } finally {
       setLoading(false);
@@ -27,9 +28,10 @@ function App() {
 
   const handleAdd = async (title) => {
     try {
-      const res = await addTask(title);
-      setTasks([res.data, ...tasks]);
+      const newTask = await addTask(title);
+      setTasks([newTask, ...tasks]);
     } catch (err) {
+      console.error("Add error:", err);
       alert('Failed to add task');
     }
   };
