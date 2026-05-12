@@ -12,9 +12,11 @@ function App() {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, []); // Only fetch on mount
 
   const fetchTasks = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const data = await getTasks();
       setTasks(Array.isArray(data) ? data : data.data || []);
@@ -29,21 +31,21 @@ function App() {
   const handleAdd = async (title) => {
     try {
       const newTask = await addTask(title);
-      setTasks([newTask, ...tasks]);
+      setTasks([newTask.data || newTask, ...tasks]);
     } catch (err) {
       console.error("Add error:", err);
-      alert('Failed to add task');
+      setError('Failed to add task');
     }
   };
 
   const handleToggle = async (id) => {
     try {
-      await toggleComplete(id);
+      const updatedTask = await toggleComplete(id);
       setTasks(tasks.map(task =>
-        task.id === id ? { ...task, status: task.status === 'pending' ? 'completed' : 'pending' } : task
+        task.id === id ? { ...task, status: updatedTask.data?.status || (task.status === 'pending' ? 'completed' : 'pending') } : task
       ));
     } catch (err) {
-      alert('Failed to update task');
+      setError('Failed to update task');
     }
   };
 
@@ -52,7 +54,7 @@ function App() {
       await updateTask(id, newTitle);
       setTasks(tasks.map(task => task.id === id ? { ...task, title: newTitle } : task));
     } catch (err) {
-      alert('Failed to update task');
+      setError('Failed to update task');
     }
   };
 
@@ -62,11 +64,11 @@ function App() {
       await deleteTask(id);
       setTasks(tasks.filter(task => task.id !== id));
     } catch (err) {
-      alert('Failed to delete task');
+      setError('Failed to delete task');
     }
   };
 
-  const filteredTasksCount = tasks.filter(t => 
+  const filteredTasksCount = tasks.filter(t =>
     filter === 'all' || t.status === filter
   ).length;
 
