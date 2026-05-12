@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/tasks';
+const API_URL = 'https://todo-backend-2026-eehyevfmhbcjegga.southeastasia-01.azurewebsites.net/api/tasks';
 
 export const getTasks = () => axios.get(API_URL);
 export const addTask = (title) => axios.post(API_URL, { title });
