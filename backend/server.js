@@ -7,15 +7,15 @@ dotenv.config();
 
 const app = express();
 
-// 🔥 Most Permissive CORS Configuration
+// 🔥 FINAL STRONG CORS CONFIGURATION
 app.use(cors({
-  origin: '*',           // Allow all origins
+  origin: '*',                    // Allow all origins (for deployment)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
-// Handle preflight requests
+// Handle preflight OPTIONS requests
 app.options('*', cors());
 
 app.use(express.json());
@@ -25,5 +25,5 @@ app.use('/api/tasks', taskRoutes);
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server is running on port ${PORT}`);
 });
