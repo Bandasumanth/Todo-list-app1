@@ -7,16 +7,16 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Most Permissive + Reliable CORS for Azure
+// 🔥 Most Permissive CORS Configuration
 app.use(cors({
-  origin: true,                    // Allow all origins (safe for now)
+  origin: '*',           // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
-// Alternative explicit way (if above doesn't work)
-app.options('*', cors());   // Handle preflight requests
+// Handle preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 
@@ -25,5 +25,5 @@ app.use('/api/tasks', taskRoutes);
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
