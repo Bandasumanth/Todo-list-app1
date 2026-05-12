@@ -7,17 +7,16 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Updated CORS for your actual frontend
-app.use(cors({ 
-  origin: [
-    'https://victorious-dune-0c6640b00.7.azurestaticapps.net',  // Your frontend URL
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+// ✅ Most Permissive + Reliable CORS for Azure
+app.use(cors({
+  origin: true,                    // Allow all origins (safe for now)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
+
+// Alternative explicit way (if above doesn't work)
+app.options('*', cors());   // Handle preflight requests
 
 app.use(express.json());
 
