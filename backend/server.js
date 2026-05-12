@@ -13,7 +13,7 @@ const allowedOrigins = [
   'http://localhost:3000'
 ];
 
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) {
@@ -22,11 +22,11 @@ app.use(cors({
     return callback(new Error('CORS not allowed for this origin'));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
 
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
@@ -35,6 +35,11 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/tasks', taskRoutes);
+
+app.use((err, req, res, next) => {
+  console.error('SERVER ERROR:', err);
+  res.status(500).json({ error: err.message });
+});
 
 const PORT = process.env.PORT || 8080;
 
