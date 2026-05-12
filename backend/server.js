@@ -16,9 +16,7 @@ const allowedOrigins = [
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error('CORS not allowed for this origin'));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -27,7 +25,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
-
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -42,7 +39,6 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 8080;
-
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
