@@ -7,23 +7,32 @@ dotenv.config();
 
 const app = express();
 
-// Strong CORS Configuration
+const allowedOrigins = [
+  'https://victorious-dune-0c6640b00.7.azurestaticapps.net',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: '*',   // Allow all for now (we can restrict later)
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS not allowed for this origin'));
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
-// Explicitly handle preflight requests
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.sendStatus(200);
-});
+app.options('*', cors());
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('API is running');
+});
 
 app.use('/api/tasks', taskRoutes);
 
